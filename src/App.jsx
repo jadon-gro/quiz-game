@@ -5,15 +5,31 @@ import Confetti from "react-confetti"
 
 
 export default function App() {
-  let [gameStarted, setGameStarted] = useState(false)
+  let [gameStarted, setGameStarted] = useState(() => JSON.parse(localStorage.getItem("gameStarted")) || false)
 
-  let [questions, setQuestions] = useState([])
+  let [questions, setQuestions] = useState(() => JSON.parse(localStorage.getItem("questions")) || [])
 
-  let [isGameOver, setGameOver] = useState(false)
+  let [isGameOver, setGameOver] = useState(() => JSON.parse(localStorage.getItem("isGameOver")) || false)
 
-  let [score, setScore] = useState(0)
+  let [score, setScore] = useState(() => JSON.parse(localStorage.getItem("score")) || 0)
 
-  let [difficulty, setDifficulty] = useState("easy")
+  let [difficulty, setDifficulty] = useState(() => JSON.parse(localStorage.getItem("difficulty")) || "easy")
+
+  useEffect(() => {
+    localStorage.setItem("gameStarted", JSON.stringify(gameStarted))
+  }, [gameStarted])
+  useEffect(() => {
+    localStorage.setItem("questions", JSON.stringify(questions))
+  }, [questions])
+  useEffect(() => {
+    localStorage.setItem("isGameOver", JSON.stringify(isGameOver))
+  }, [isGameOver])
+  useEffect(() => {
+    localStorage.setItem("score", JSON.stringify(score))
+  }, [score])
+  useEffect(() => {
+    localStorage.setItem("difficulty", JSON.stringify(difficulty))
+  }, [difficulty])
 
   useEffect(() => {
     let score = 0;
@@ -29,7 +45,7 @@ export default function App() {
   }
 
   async function loadQuestions(difficulty) {
-    const data = await fetch(`https://opentdb.com/api.php?amount=5&difficulty=${difficulty}&type=multiple`)
+    const data = await fetch(`https://opentdb.com/api.php?amount=2&difficulty=${difficulty}&type=multiple`)
       .then(response => response.json())
     setQuestions(data.results.map(question => {
       return({
